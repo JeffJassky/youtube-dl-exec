@@ -14,22 +14,26 @@ const {
   YOUTUBE_DL_GITHUB_TOKEN
 } = require('../src/constants')
 
+const fetchWithAuth = (url) => {
+	const options = YOUTUBE_DL_GITHUB_TOKEN
+	? {
+		headers: {
+		  'Authorization': `Bearer ${YOUTUBE_DL_GITHUB_TOKEN}`
+		}
+	  }
+	: {}
+	return fetch(url, options)
+}
+
 const getLatest = ({ assets }) => {
   const { browser_download_url: url } = assets.find(
     ({ name }) => name === YOUTUBE_DL_FILE
   )
-  return fetch(url)
+  return fetchWithAuth(url)
 }
 
 const getBinary = async url => {
-  let response = await fetch(
-    url,
-    YOUTUBE_DL_GITHUB_TOKEN ? {
-      headers: {
-        'Authorization': `Bearer ${YOUTUBE_DL_GITHUB_TOKEN}`
-      }
-    } : {}
-  )
+  let response = await fetchWithAuth(url)
 
   if (response.headers.get('content-type') !== 'application/octet-stream') {
     const payload = await response.json()
