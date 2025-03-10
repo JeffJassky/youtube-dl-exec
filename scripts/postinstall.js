@@ -22,6 +22,7 @@ const fetchWithAuth = (url) => {
 		}
 	  }
 	: {}
+  console.log('Fetching ytld url', url, 'with options', options);
 	return fetch(url, options)
 }
 
